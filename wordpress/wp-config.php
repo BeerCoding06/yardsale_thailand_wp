@@ -26,7 +26,7 @@ define( 'DB_NAME', 'nuxtcommerce_db' );
 define( 'DB_USER', 'root' );
 
 /** Database password */
-define( 'DB_PASSWORD', 'KtmdoLt9b$n!' );
+define( 'DB_PASSWORD', 'root' );
 
 /** Database hostname */
 define( 'DB_HOST', '157.85.98.150' );
