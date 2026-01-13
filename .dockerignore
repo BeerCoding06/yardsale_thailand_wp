@@ -1,0 +1,45 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation
+README.md
+README.Docker.md
+*.md
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+.cache
+
+# Node modules (if any)
+node_modules
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Exclude wp-config.docker.php (it's just a template)
+wp-config.docker.php
+
