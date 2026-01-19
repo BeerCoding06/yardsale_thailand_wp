@@ -97,6 +97,10 @@ define('WP_MEMORY_LIMIT', '256M'); // เพิ่ม memory limit
 // Enable Application Passwords for local development (without HTTPS requirement)
 define( 'WP_ENVIRONMENT_TYPE', 'local' );
 
+// Force WordPress URLs for production
+define( 'WP_SITEURL', 'http://yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me/wordpress' );
+define( 'WP_HOME', 'http://yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me/wordpress' );
+
 /* That's all, stop editing! Happy publishing. */
 
 /** Absolute path to the WordPress directory. */
