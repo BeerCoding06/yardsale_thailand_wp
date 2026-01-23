@@ -85,8 +85,8 @@ $table_prefix = 'wp_';
  *
  * @link https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
  */
-define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG', false );
+define( 'WP_DEBUG_LOG', false );
 define( 'WP_DEBUG_DISPLAY', false );
 
 set_time_limit(300); // 5 นาที
@@ -94,12 +94,12 @@ define('WP_MEMORY_LIMIT', '256M'); // เพิ่ม memory limit
 
 /* Add any custom values between this line and the "stop editing" line. */
 
-// Enable Application Passwords for local development (without HTTPS requirement)
-define( 'WP_ENVIRONMENT_TYPE', 'local' );
+// Production environment
+define( 'WP_ENVIRONMENT_TYPE', 'production' );
 
 // Force WordPress URLs for production
-define( 'WP_SITEURL', 'http://yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me/wordpress' );
-define( 'WP_HOME', 'http://yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me/wordpress' );
+define('WP_HOME', 'http://yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me');
+define('WP_SITEURL', 'http://yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me/wordpress');
 
 /* That's all, stop editing! Happy publishing. */
 
