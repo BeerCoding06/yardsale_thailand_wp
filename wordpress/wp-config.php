@@ -98,7 +98,7 @@ define('WP_MEMORY_LIMIT', '256M'); // เพิ่ม memory limit
 define( 'WP_ENVIRONMENT_TYPE', 'production' );
 
 // Force WordPress URLs for production
-define('WP_HOME', 'http://yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me');
+define('WP_HOME', 'http://yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me/wordpress');
 define('WP_SITEURL', 'http://yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me/wordpress');
 
 /* That's all, stop editing! Happy publishing. */
