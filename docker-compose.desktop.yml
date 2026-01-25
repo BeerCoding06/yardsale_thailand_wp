@@ -1,0 +1,57 @@
+# Docker Compose for Docker Desktop
+# This file is optimized for Docker Desktop usage
+
+version: '3.8'
+
+services:
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: yardsale_wordpress_prod
+    restart: unless-stopped
+    environment:
+      # Database configuration - using external database
+      - DB_HOST=157.85.98.150:3306
+      - DB_USER=root
+      - DB_PASSWORD=RootBeer06032534
+      - DB_NAME=nuxtcommerce_db
+      - WP_DEBUG=false
+      - WP_SITEURL_SUBDIRECTORY=/wordpress
+    volumes:
+      # Persistent storage for uploads (important!)
+      - wp_uploads:/var/www/html/wp-content/uploads
+      # Persistent storage for cache
+      - wp_cache:/var/www/html/wp-content/cache
+    networks:
+      - traefik_network
+    labels:
+      # Traefik configuration
+      - "traefik.enable=true"
+      - "traefik.http.routers.wordpress.rule=PathPrefix(`/wordpress`)"
+      - "traefik.http.routers.wordpress.entrypoints=web"
+      - "traefik.http.services.wordpress.loadbalancer.server.port=80"
+      # Strip /wordpress prefix before forwarding to container
+      - "traefik.http.middlewares.wordpress-stripprefix.stripprefix.prefixes=/wordpress"
+      # Pass headers (important for WordPress)
+      - "traefik.http.middlewares.wordpress-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      # Combine middlewares
+      - "traefik.http.routers.wordpress.middlewares=wordpress-stripprefix,wordpress-headers"
+      # Health check (after strip prefix, it's just /)
+      - "traefik.http.services.wordpress.loadbalancer.healthcheck.path=/"
+      - "traefik.http.services.wordpress.loadbalancer.healthcheck.interval=30s"
+    # Optional: Expose port for direct access (for testing)
+    # ports:
+    #   - "8080:80"
+
+volumes:
+  wp_uploads:
+    driver: local
+  wp_cache:
+    driver: local
+
+networks:
+  traefik_network:
+    # Use the same network as other containers (yardsale_thailand03)
+    external: true
+    name: yardsale_thailand03_default
