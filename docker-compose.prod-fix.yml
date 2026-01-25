@@ -43,12 +43,11 @@ volumes:
 
 networks:
   traefik_network:
-    # Try to use existing network, or create new one
-    # If Traefik uses a different network, change this to match
-    # Common names: traefik, traefik_default, web, proxy
+    # Option 1: Create new network (if Traefik can connect to it)
     external: false
     name: traefik_network
     driver: bridge
-    # Alternative: use existing network
+    
+    # Option 2: Use existing network (uncomment if Traefik uses this)
     # external: true
     # name: yardsale_thailand03_yardsale-network
