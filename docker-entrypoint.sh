@@ -46,18 +46,16 @@ define( 'WP_HOME', 'https://' . \\\$_SERVER['HTTP_HOST'] . '${WP_SITEURL_SUBDIRE
   fi
 fi
 
-# Fix .htaccess RewriteBase for /wordpress/ subdirectory
+# Fix .htaccess RewriteBase
+# Since Traefik strips /wordpress prefix, container receives requests without /wordpress
+# So RewriteBase should be / (root) not /wordpress/
 if [ -f /var/www/html/.htaccess ]; then
-  # Update RewriteBase to /wordpress/ if it's different
-  if [ ! -z "$WP_SITEURL_SUBDIRECTORY" ]; then
-    # Replace old paths with new subdirectory path
-    sed -i "s|RewriteBase /yardsale_thailand/wordpress/|RewriteBase ${WP_SITEURL_SUBDIRECTORY}/|g" /var/www/html/.htaccess
-    sed -i "s|RewriteBase /wordpress/|RewriteBase ${WP_SITEURL_SUBDIRECTORY}/|g" /var/www/html/.htaccess
-    sed -i "s|/yardsale_thailand/wordpress/index.php|${WP_SITEURL_SUBDIRECTORY}/index.php|g" /var/www/html/.htaccess
-    sed -i "s|/wordpress/index.php|${WP_SITEURL_SUBDIRECTORY}/index.php|g" /var/www/html/.htaccess
-    # If RewriteBase is /, change it to subdirectory
-    sed -i "s|^RewriteBase /$|RewriteBase ${WP_SITEURL_SUBDIRECTORY}/|g" /var/www/html/.htaccess
-  fi
+  # Replace all RewriteBase to / because Traefik strips prefix
+  sed -i "s|RewriteBase /yardsale_thailand/wordpress/|RewriteBase /|g" /var/www/html/.htaccess
+  sed -i "s|RewriteBase /wordpress/|RewriteBase /|g" /var/www/html/.htaccess
+  # Replace RewriteRule paths
+  sed -i "s|/yardsale_thailand/wordpress/index.php|/index.php|g" /var/www/html/.htaccess
+  sed -i "s|/wordpress/index.php|/index.php|g" /var/www/html/.htaccess
 fi
 
 # Set proper permissions

@@ -4,11 +4,12 @@ RewriteEngine On
 # 🔑 FIX Authorization Header (WooCommerce REST API)
 SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 
-RewriteBase /wordpress/
+# RewriteBase is / because Traefik strips /wordpress prefix
+RewriteBase /
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /wordpress/index.php [L]
+RewriteRule . /index.php [L]
 </IfModule>
 
 # BEGIN WordPress
@@ -18,11 +19,12 @@ RewriteRule . /wordpress/index.php [L]
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-RewriteBase /wordpress/
+# RewriteBase is / because Traefik strips /wordpress prefix
+RewriteBase /
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /wordpress/index.php [L]
+RewriteRule . /index.php [L]
 </IfModule>
 
 # END WordPress
