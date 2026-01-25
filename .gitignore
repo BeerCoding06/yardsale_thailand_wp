@@ -1,0 +1,140 @@
+# WordPress Core - Keep core files but ignore some
+# Note: You might want to keep wp-admin and wp-includes for production
+# Uncomment below if you want to ignore WordPress core (not recommended for production)
+# wordpress/wp-admin/
+# wordpress/wp-includes/
+wordpress/license.txt
+wordpress/readme.html
+
+# WordPress Content - Uploads (ข้อมูลเยอะมาก!)
+wordpress/wp-content/uploads/
+!wordpress/wp-content/uploads/.htaccess
+!wordpress/wp-content/uploads/index.php
+
+# WordPress Content - Cache
+wordpress/wp-content/cache/
+wordpress/wp-content/upgrade/
+wordpress/wp-content/upgrade-temp-backup/
+
+# WordPress Content - Logs
+wordpress/wp-content/*.log
+wordpress/wp-content/debug.log
+wordpress/wp-content/wc-logs/
+wordpress/wp-content/backup-db/
+wordpress/wp-content/backups/
+
+# WordPress Content - Plugins (keep structure, ignore vendor/node_modules)
+wordpress/wp-content/plugins/*/vendor/
+wordpress/wp-content/plugins/*/node_modules/
+wordpress/wp-content/plugins/*/node_modules/
+wordpress/wp-content/plugins/*/build/
+wordpress/wp-content/plugins/*/dist/
+wordpress/wp-content/plugins/*/.git/
+wordpress/wp-content/plugins/*/.svn/
+wordpress/wp-content/plugins/*/tests/
+wordpress/wp-content/plugins/*/test/
+wordpress/wp-content/plugins/*/tmp/
+wordpress/wp-content/plugins/*/temp/
+wordpress/wp-content/plugins/*/*.log
+wordpress/wp-content/plugins/*/composer.lock
+wordpress/wp-content/plugins/*/package-lock.json
+wordpress/wp-content/plugins/*/yarn.lock
+
+# WordPress Content - Themes (keep structure, ignore build files)
+wordpress/wp-content/themes/*/node_modules/
+wordpress/wp-content/themes/*/vendor/
+wordpress/wp-content/themes/*/build/
+wordpress/wp-content/themes/*/dist/
+wordpress/wp-content/themes/*/.git/
+wordpress/wp-content/themes/*/*.log
+wordpress/wp-content/themes/*/composer.lock
+wordpress/wp-content/themes/*/package-lock.json
+
+# WordPress Content - Languages (keep structure but can be regenerated)
+# wordpress/wp-content/languages/  # Uncomment if you want to ignore language files
+
+# Database
+*.sql
+*.sql.gz
+*.sqlite
+*.db
+
+# Docker
+.docker/
+docker-compose.override.yml
+*.env
+.env.local
+.env.production
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Node modules (if any)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Composer
+vendor/
+composer.lock
+
+# Build files
+build/
+dist/
+*.min.js
+*.min.css
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*~
+
+# WordPress specific
+wp-config-local.php
+wp-config-sample.php
+.htaccess.backup
+
+# Large plugin vendor directories (specific ones)
+wordpress/wp-content/plugins/google-listings-and-ads/vendor/
+wordpress/wp-content/plugins/woocommerce/vendor/
+wordpress/wp-content/plugins/jetpack/vendor/
+wordpress/wp-content/plugins/woocommerce-paypal-payments/vendor/
+
+# Keep important files
+!wordpress/wp-content/plugins/index.php
+!wordpress/wp-content/themes/index.php
+!wordpress/wp-content/uploads/index.php
+!.htaccess
