@@ -31,14 +31,11 @@ services:
       - "traefik.http.routers.wordpress.rule=PathPrefix(`/wordpress`)"
       - "traefik.http.routers.wordpress.entrypoints=web"
       - "traefik.http.services.wordpress.loadbalancer.server.port=80"
-      # Strip /wordpress prefix before forwarding to container
-      - "traefik.http.middlewares.wordpress-stripprefix.stripprefix.prefixes=/wordpress"
-      # Pass headers (important for WordPress)
+      # Pass headers (important for WordPress) - NO strip prefix, WordPress receives /wordpress/ path directly
       - "traefik.http.middlewares.wordpress-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      # Combine middlewares
-      - "traefik.http.routers.wordpress.middlewares=wordpress-stripprefix,wordpress-headers"
-      # Health check (after strip prefix, it's just /)
-      - "traefik.http.services.wordpress.loadbalancer.healthcheck.path=/"
+      - "traefik.http.routers.wordpress.middlewares=wordpress-headers"
+      # Health check (WordPress receives /wordpress/ path directly)
+      - "traefik.http.services.wordpress.loadbalancer.healthcheck.path=/wordpress/"
       - "traefik.http.services.wordpress.loadbalancer.healthcheck.interval=30s"
     # Optional: Expose port for direct access (for testing)
     # ports:

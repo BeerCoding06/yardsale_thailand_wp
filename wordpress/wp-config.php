@@ -99,11 +99,19 @@ define('WP_MEMORY_LIMIT', '256M'); // เพิ่ม memory limit
 // WP_HOME = root domain (https://domain.com)
 // WP_SITEURL = subdirectory (https://domain.com/wordpress)
 // This will be overridden by entrypoint script if WP_SITEURL_SUBDIRECTORY is set
-if ( ! defined( 'WP_HOME' ) ) {
-    define( 'WP_HOME', 'https://' . $_SERVER['HTTP_HOST'] );
-}
-if ( ! defined( 'WP_SITEURL' ) ) {
-    define( 'WP_SITEURL', 'https://' . $_SERVER['HTTP_HOST'] . '/wordpress' );
+if ( ! defined( 'WP_HOME' ) || ! defined( 'WP_SITEURL' ) ) {
+    $protocol = (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
+        ? $_SERVER['HTTP_X_FORWARDED_PROTO']
+        : ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http');
+
+    $host = $_SERVER['HTTP_HOST'];
+
+    if ( ! defined( 'WP_HOME' ) ) {
+        define('WP_HOME', $protocol . '://' . $host);
+    }
+    if ( ! defined( 'WP_SITEURL' ) ) {
+        define('WP_SITEURL', $protocol . '://' . $host . '/wordpress');
+    }
 }
 
 // Enable Application Passwords for local development (without HTTPS requirement)

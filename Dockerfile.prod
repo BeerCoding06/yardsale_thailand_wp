@@ -102,9 +102,9 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 # Expose port 80
 EXPOSE 80
 
-# Health check (check root path since Traefik strips /wordpress prefix)
+# Health check (WordPress receives /wordpress/ path directly)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
+    CMD curl -f http://localhost/wordpress/ || exit 1
 
 # Start Apache
 CMD ["apache2-foreground"]

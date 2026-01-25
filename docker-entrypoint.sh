@@ -34,30 +34,52 @@ if [ -f /var/www/html/wp-config.php ]; then
   # Add/Update subdirectory configuration if needed
   if [ ! -z "$WP_SITEURL_SUBDIRECTORY" ]; then
     # Remove old WP_SITEURL and WP_HOME definitions if they exist
+    # Remove the entire if block that defines WP_HOME and WP_SITEURL
+    sed -i '/\/\/ WordPress subdirectory configuration/,/^}/d' /var/www/html/wp-config.php
     sed -i '/define(.*WP_SITEURL.*)/d' /var/www/html/wp-config.php
     sed -i '/define(.*WP_HOME.*)/d' /var/www/html/wp-config.php
     
     # Add new definitions before "That's all, stop editing!"
     # WP_HOME = root domain (https://domain.com)
     # WP_SITEURL = subdirectory (https://domain.com/wordpress)
+    # Use HTTP_X_FORWARDED_PROTO to detect protocol
     sed -i "/That's all, stop editing!/i\\
-// WordPress subdirectory configuration\\
-define( 'WP_HOME', 'https://' . \\\$_SERVER['HTTP_HOST'] );\\
-define( 'WP_SITEURL', 'https://' . \\\$_SERVER['HTTP_HOST'] . '${WP_SITEURL_SUBDIRECTORY}' );\\
+// WordPress subdirectory configuration for /wordpress/\\
+// WP_HOME = root domain (https://domain.com)\\
+// WP_SITEURL = subdirectory (https://domain.com/wordpress)\\
+// This will be overridden by entrypoint script if WP_SITEURL_SUBDIRECTORY is set\\
+if ( ! defined( 'WP_HOME' ) || ! defined( 'WP_SITEURL' ) ) {\\
+    \\\$protocol = (!empty(\\\$_SERVER['HTTP_X_FORWARDED_PROTO']))\\
+        ? \\\$_SERVER['HTTP_X_FORWARDED_PROTO']\\
+        : ((!empty(\\\$_SERVER['HTTPS']) && \\\$_SERVER['HTTPS'] !== 'off') ? 'https' : 'http');\\
+\\
+    \\\$host = \\\$_SERVER['HTTP_HOST'];\\
+\\
+    if ( ! defined( 'WP_HOME' ) ) {\\
+        define('WP_HOME', \\\$protocol . '://' . \\\$host);\\
+    }\\
+    if ( ! defined( 'WP_SITEURL' ) ) {\\
+        define('WP_SITEURL', \\\$protocol . '://' . \\\$host . '${WP_SITEURL_SUBDIRECTORY}');\\
+    }\\
+}\\
 " /var/www/html/wp-config.php
   fi
 fi
 
 # Fix .htaccess RewriteBase
-# Since Traefik strips /wordpress prefix, container receives requests without /wordpress
-# So RewriteBase should be / (root) not /wordpress/
+# WordPress receives /wordpress/ path directly (no strip prefix)
+# So RewriteBase should be /wordpress/ not /
 if [ -f /var/www/html/.htaccess ]; then
-  # Replace all RewriteBase to / because Traefik strips prefix
-  sed -i "s|RewriteBase /yardsale_thailand/wordpress/|RewriteBase /|g" /var/www/html/.htaccess
-  sed -i "s|RewriteBase /wordpress/|RewriteBase /|g" /var/www/html/.htaccess
+  # Replace all RewriteBase to /wordpress/ because WordPress receives full path
+  sed -i "s|RewriteBase /yardsale_thailand/wordpress/|RewriteBase /wordpress/|g" /var/www/html/.htaccess
+  sed -i "s|RewriteBase /$|RewriteBase /wordpress/|g" /var/www/html/.htaccess
   # Replace RewriteRule paths
-  sed -i "s|/yardsale_thailand/wordpress/index.php|/index.php|g" /var/www/html/.htaccess
-  sed -i "s|/wordpress/index.php|/index.php|g" /var/www/html/.htaccess
+  sed -i "s|/yardsale_thailand/wordpress/index.php|/wordpress/index.php|g" /var/www/html/.htaccess
+  sed -i "s|/index\.php|/wordpress/index.php|g" /var/www/html/.htaccess
+  # Ensure RewriteBase is /wordpress/
+  if ! grep -q "RewriteBase /wordpress/" /var/www/html/.htaccess; then
+    sed -i "s|^RewriteBase|RewriteBase /wordpress/|g" /var/www/html/.htaccess
+  fi
 fi
 
 # Set proper permissions

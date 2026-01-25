@@ -28,11 +28,11 @@ services:
       - "traefik.http.routers.wordpress.rule=PathPrefix(`/wordpress`)"
       - "traefik.http.routers.wordpress.entrypoints=web"
       - "traefik.http.services.wordpress.loadbalancer.server.port=80"
-      # Strip /wordpress prefix before forwarding to container
-      - "traefik.http.middlewares.wordpress-stripprefix.stripprefix.prefixes=/wordpress"
-      - "traefik.http.routers.wordpress.middlewares=wordpress-stripprefix"
-      # Health check (after strip prefix, it's just /)
-      - "traefik.http.services.wordpress.loadbalancer.healthcheck.path=/"
+      # Pass headers (important for WordPress) - NO strip prefix, WordPress receives /wordpress/ path directly
+      - "traefik.http.middlewares.wordpress-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.wordpress.middlewares=wordpress-headers"
+      # Health check (WordPress receives /wordpress/ path directly)
+      - "traefik.http.services.wordpress.loadbalancer.healthcheck.path=/wordpress/"
       - "traefik.http.services.wordpress.loadbalancer.healthcheck.interval=30s"
 
 volumes:
@@ -43,11 +43,6 @@ volumes:
 
 networks:
   traefik_network:
-    # Option 1: Create new network (if Traefik can connect to it)
-    external: false
-    name: traefik_network
-    driver: bridge
-    
-    # Option 2: Use existing network (uncomment if Traefik uses this)
-    # external: true
-    # name: yardsale_thailand03_yardsale-network
+    # Use the same network as other containers (yardsale_thailand03)
+    external: true
+    name: yardsale_thailand03_default
