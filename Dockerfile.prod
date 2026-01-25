@@ -78,6 +78,13 @@ RUN { \
 # Copy WordPress files (excluding uploads which will be in volume)
 COPY wordpress/ /var/www/html/
 
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Install mysql-client for health checks
+RUN apt-get update && apt-get install -y default-mysql-client && rm -rf /var/lib/apt/lists/*
+
 # Create directories for volumes (uploads, cache) with proper permissions
 RUN mkdir -p /var/www/html/wp-content/uploads \
     && mkdir -p /var/www/html/wp-content/cache \
@@ -87,8 +94,8 @@ RUN mkdir -p /var/www/html/wp-content/uploads \
     && chmod -R 775 /var/www/html/wp-content/uploads \
     && chmod -R 775 /var/www/html/wp-content/cache
 
-# Note: wp-config.php should be provided via volume or environment variables in production
-# The container expects wp-config.php to be mounted or created at runtime
+# Set entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # Expose port 80
 EXPOSE 80
