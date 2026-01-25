@@ -31,18 +31,18 @@ if [ -f /var/www/html/wp-config.php ]; then
     echo "define( 'WP_DEBUG', ${WP_DEBUG} );" >> /var/www/html/wp-config.php
   fi
   
-  # Add subdirectory configuration if needed
+  # Add/Update subdirectory configuration if needed
   if [ ! -z "$WP_SITEURL_SUBDIRECTORY" ]; then
-    # Check if WP_SITEURL and WP_HOME are already defined
-    if ! grep -q "WP_SITEURL" /var/www/html/wp-config.php; then
-      # Add before "That's all, stop editing!"
-      cat >> /var/www/html/wp-config.php << EOF
-
-// WordPress subdirectory configuration
-define( 'WP_SITEURL', 'https://' . \$_SERVER['HTTP_HOST'] . '${WP_SITEURL_SUBDIRECTORY}' );
-define( 'WP_HOME', 'https://' . \$_SERVER['HTTP_HOST'] . '${WP_SITEURL_SUBDIRECTORY}' );
-EOF
-    fi
+    # Remove old WP_SITEURL and WP_HOME definitions if they exist
+    sed -i '/define(.*WP_SITEURL.*)/d' /var/www/html/wp-config.php
+    sed -i '/define(.*WP_HOME.*)/d' /var/www/html/wp-config.php
+    
+    # Add new definitions before "That's all, stop editing!"
+    sed -i "/That's all, stop editing!/i\\
+// WordPress subdirectory configuration\\
+define( 'WP_SITEURL', 'https://' . \\\$_SERVER['HTTP_HOST'] . '${WP_SITEURL_SUBDIRECTORY}' );\\
+define( 'WP_HOME', 'https://' . \\\$_SERVER['HTTP_HOST'] . '${WP_SITEURL_SUBDIRECTORY}' );\\
+" /var/www/html/wp-config.php
   fi
 fi
 
@@ -52,7 +52,9 @@ if [ -f /var/www/html/.htaccess ]; then
   if [ ! -z "$WP_SITEURL_SUBDIRECTORY" ]; then
     # Replace old paths with new subdirectory path
     sed -i "s|RewriteBase /yardsale_thailand/wordpress/|RewriteBase ${WP_SITEURL_SUBDIRECTORY}/|g" /var/www/html/.htaccess
+    sed -i "s|RewriteBase /wordpress/|RewriteBase ${WP_SITEURL_SUBDIRECTORY}/|g" /var/www/html/.htaccess
     sed -i "s|/yardsale_thailand/wordpress/index.php|${WP_SITEURL_SUBDIRECTORY}/index.php|g" /var/www/html/.htaccess
+    sed -i "s|/wordpress/index.php|${WP_SITEURL_SUBDIRECTORY}/index.php|g" /var/www/html/.htaccess
     # If RewriteBase is /, change it to subdirectory
     sed -i "s|^RewriteBase /$|RewriteBase ${WP_SITEURL_SUBDIRECTORY}/|g" /var/www/html/.htaccess
   fi
