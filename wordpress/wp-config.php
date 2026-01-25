@@ -96,12 +96,14 @@ define('WP_MEMORY_LIMIT', '256M'); // เพิ่ม memory limit
 /* Add any custom values between this line and the "stop editing" line. */
 
 // WordPress subdirectory configuration for /wordpress/
+// WP_HOME = root domain (https://domain.com)
+// WP_SITEURL = subdirectory (https://domain.com/wordpress)
 // This will be overridden by entrypoint script if WP_SITEURL_SUBDIRECTORY is set
+if ( ! defined( 'WP_HOME' ) ) {
+    define( 'WP_HOME', 'https://' . $_SERVER['HTTP_HOST'] );
+}
 if ( ! defined( 'WP_SITEURL' ) ) {
     define( 'WP_SITEURL', 'https://' . $_SERVER['HTTP_HOST'] . '/wordpress' );
-}
-if ( ! defined( 'WP_HOME' ) ) {
-    define( 'WP_HOME', 'https://' . $_SERVER['HTTP_HOST'] . '/wordpress' );
 }
 
 // Enable Application Passwords for local development (without HTTPS requirement)

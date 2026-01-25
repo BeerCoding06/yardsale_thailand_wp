@@ -38,10 +38,12 @@ if [ -f /var/www/html/wp-config.php ]; then
     sed -i '/define(.*WP_HOME.*)/d' /var/www/html/wp-config.php
     
     # Add new definitions before "That's all, stop editing!"
+    # WP_HOME = root domain (https://domain.com)
+    # WP_SITEURL = subdirectory (https://domain.com/wordpress)
     sed -i "/That's all, stop editing!/i\\
 // WordPress subdirectory configuration\\
+define( 'WP_HOME', 'https://' . \\\$_SERVER['HTTP_HOST'] );\\
 define( 'WP_SITEURL', 'https://' . \\\$_SERVER['HTTP_HOST'] . '${WP_SITEURL_SUBDIRECTORY}' );\\
-define( 'WP_HOME', 'https://' . \\\$_SERVER['HTTP_HOST'] . '${WP_SITEURL_SUBDIRECTORY}' );\\
 " /var/www/html/wp-config.php
   fi
 fi
