@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: yardsale_wordpress_prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      # Database configuration (adjust as needed)
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=your_secure_password
+      - WORDPRESS_DB_NAME=wordpress
+    volumes:
+      # Persistent storage for uploads (important!)
+      - wp_uploads:/var/www/html/wp-content/uploads
+      # Persistent storage for cache
+      - wp_cache:/var/www/html/wp-content/cache
+      # wp-config.php can be mounted from host or use environment variables
+      # - ./wp-config.prod.php:/var/www/html/wp-config.php:ro
+    depends_on:
+      - db
+    networks:
+      - wordpress_network
+
+  db:
+    image: mysql:8.0
+    container_name: yardsale_db_prod
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: your_secure_password
+      MYSQL_ROOT_PASSWORD: your_secure_root_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - wordpress_network
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  wp_uploads:
+    driver: local
+  wp_cache:
+    driver: local
+  db_data:
+    driver: local
+
+networks:
+  wordpress_network:
+    driver: bridge

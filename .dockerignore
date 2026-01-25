@@ -43,3 +43,17 @@ node_modules
 # Exclude wp-config.docker.php (it's just a template)
 wp-config.docker.php
 
+# WordPress - Exclude uploads (should be in volume for production)
+wordpress/wp-content/uploads/*
+!wordpress/wp-content/uploads/.htaccess
+
+# WordPress - Exclude cache (should be in volume)
+wordpress/wp-content/cache/*
+!wordpress/wp-content/cache/.htaccess
+
+# WordPress - Exclude debug logs
+wordpress/wp-content/debug.log
+wordpress/wp-content/*.log
+
+# WordPress - Exclude upgrade temp files
+wordpress/wp-content/upgrade-temp-backup/*
