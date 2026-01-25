@@ -10,7 +10,9 @@ DB_PORT="3306"
 DB_USER="root"
 DB_PASS="RootBeer06032534"
 DB_NAME="nuxtcommerce_db"
-SITE_URL="https://yardsalethailand-wp-8txv8a-1b65c7-157-85-98-150.traefik.me/wordpress"
+DOMAIN="yardsalethailand-wp-8txv8a-1b65c7-157-85-98-150.traefik.me"
+WP_HOME="https://${DOMAIN}"
+WP_SITEURL="https://${DOMAIN}/wordpress"
 
 # Check container
 if ! docker ps | grep -q "$CONTAINER"; then
@@ -25,11 +27,19 @@ echo ""
 
 # Fix database URLs
 echo "1. Fixing database URLs..."
+echo "   WP_HOME: $WP_HOME"
+echo "   WP_SITEURL: $WP_SITEURL"
 docker exec $CONTAINER mysql -h $DB_HOST -P $DB_PORT -u $DB_USER -p$DB_PASS $DB_NAME <<EOF
-UPDATE wp_options SET option_value = '$SITE_URL' WHERE option_name = 'siteurl';
-UPDATE wp_options SET option_value = '$SITE_URL' WHERE option_name = 'home';
+-- Update home (root domain)
+UPDATE wp_options SET option_value = '$WP_HOME' WHERE option_name = 'home';
+-- Update siteurl (subdirectory)
+UPDATE wp_options SET option_value = '$WP_SITEURL' WHERE option_name = 'siteurl';
+-- Update permalink structure
 UPDATE wp_options SET option_value = '/%postname%/' WHERE option_name = 'permalink_structure';
+-- Delete rewrite rules to force regeneration
 DELETE FROM wp_options WHERE option_name = 'rewrite_rules';
+-- Also replace any old domain references
+UPDATE wp_options SET option_value = REPLACE(option_value, 'yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me', '$DOMAIN') WHERE option_value LIKE '%yardsalethailand-nuxt-8p0ykj-f4d600-157-85-98-150.traefik.me%';
 EOF
 
 echo ""
@@ -52,11 +62,12 @@ echo ""
 echo "=== Fix Complete ==="
 echo ""
 echo "⚠️  IMPORTANT: Go to WordPress Admin and flush rewrite rules:"
-echo "   1. Visit: $SITE_URL/wp-admin/"
+echo "   1. Visit: $WP_SITEURL/wp-admin/"
 echo "   2. Go to: Settings → Permalinks"
 echo "   3. Click: 'Save Changes' (don't change anything, just save)"
 echo ""
 echo "Then try accessing:"
-echo "   - $SITE_URL/wp-admin/"
-echo "   - $SITE_URL/my-account/"
-echo "   - $SITE_URL/"
+echo "   - $WP_HOME/ (root - should NOT redirect)"
+echo "   - $WP_SITEURL/wp-admin/"
+echo "   - $WP_SITEURL/my-account/"
+echo "   - $WP_SITEURL/"
