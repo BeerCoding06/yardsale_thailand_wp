@@ -5,7 +5,8 @@ FROM php:8.2-apache
 WORKDIR /var/www/html
 
 # Install system dependencies and PHP extensions required for WordPress/WooCommerce
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
@@ -32,7 +33,8 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     soap \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/cache/apt/archives/*
 
 # Install Redis extension (optional, for caching)
 RUN pecl install redis && docker-php-ext-enable redis || true
