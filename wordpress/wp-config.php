@@ -26,11 +26,10 @@ define( 'DB_NAME', getenv('DB_NAME') ?: 'nuxtcommerce_db' );
 define( 'DB_USER', getenv('DB_USER') ?: 'root' );
 
 /** Database password */
-define( 'DB_PASSWORD', getenv('DB_PASSWORD') ?: 'Beer057055263' );
+define( 'DB_PASSWORD', getenv('DB_PASSWORD') ?: 'RootBeer06032534' );
 
 /** Database hostname */
-// define( 'DB_HOST', getenv('DB_HOST') ?: 'yardsalethailandwp-yardsalethailandwp-6nsrgl:3306' );
-define( 'DB_HOST', 'yardsalethailandwp-yardsalethailandwp-6nsrgl:3306' );
+define( 'DB_HOST', getenv('DB_HOST') ?: '157.85.98.150:3306' );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8mb4' );
