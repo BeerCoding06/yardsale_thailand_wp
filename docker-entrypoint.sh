@@ -16,13 +16,13 @@ if [ -f /var/www/html/wp-config.php ]; then
   
   if [ ! -z "$DB_PASSWORD" ]; then
     sed -i "s/define( 'DB_PASSWORD', '.*' );/define( 'DB_PASSWORD', '${DB_PASSWORD}' );/" /var/www/html/wp-config.php || \
-    sed -i "s/getenv('DB_PASSWORD') ?: 'RootBeer06032534'/getenv('DB_PASSWORD') ?: '${DB_PASSWORD}'/" /var/www/html/wp-config.php
+    sed -i "s/getenv('DB_PASSWORD') ?: 'Beer057055263'/getenv('DB_PASSWORD') ?: '${DB_PASSWORD}'/" /var/www/html/wp-config.php
   fi
   
   if [ ! -z "$DB_HOST" ]; then
     # Handle DB_HOST with port
     sed -i "s/define( 'DB_HOST', '.*' );/define( 'DB_HOST', '${DB_HOST}' );/" /var/www/html/wp-config.php || \
-    sed -i "s/'157.85.98.150:3306'/'${DB_HOST}'/" /var/www/html/wp-config.php
+    sed -i "s/'yardsalethailandwp-yardsalethailandwp-6nsrgl:3306'/'${DB_HOST}'/" /var/www/html/wp-config.php
   fi
   
   # Update WP_DEBUG for production

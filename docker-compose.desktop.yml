@@ -12,9 +12,9 @@ services:
     restart: unless-stopped
     environment:
       # Database configuration - using external database
-      - DB_HOST=157.85.98.150:3306
+      - DB_HOST=yardsalethailandwp-yardsalethailandwp-6nsrgl:3306
       - DB_USER=root
-      - DB_PASSWORD=RootBeer06032534
+      - DB_PASSWORD=Beer057055263
       - DB_NAME=nuxtcommerce_db
       - WP_DEBUG=false
       - WP_SITEURL_SUBDIRECTORY=/wordpress
